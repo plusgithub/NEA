@@ -1,0 +1,16 @@
+getTime.getTime:
+  - "time"
+getDate.getDate:
+  - "date"
+calculator.calculate:
+  - "times"
+  - "plus"
+  - "minus"
+  - "to the power"
+  - "divided"
+  - "over"
+  - "multiplied"
+getNews.getNews:
+  - "news"
+searchYouTube.search_play:
+  - "play"
