@@ -51,6 +51,7 @@ class Recorder:
         self.engine = engine
         self.source = source
         self.stoped = False
+        self.triggered = False
 
         q = Queue(maxsize=int(round(BUF_MAX_SIZE / CHUNK_SIZE)))
 
@@ -63,17 +64,16 @@ class Recorder:
         record_t = threading.Thread(target=self.record, args=(q,))
         record_t.start()
 
-        try:
-            while True:
-                if self.stoped:
-                    break
-                listen_t.join(0.1)
-                record_t.join(0.1)
-        except KeyboardInterrupt:
-            self.stoped = True
+        while self.triggered == False:
+            print("Triggered = False")
+            if self.stoped:
+                break
+            listen_t.join(0.1)
+            record_t.join(0.1)
 
-        listen_t.join()
-        record_t.join()
+        print("Triggered = True")
+    
+        #return True
 
 
     def predict(self, data):
@@ -100,7 +100,10 @@ class Recorder:
                 frames.append(chunk)
                 if len(frames) >= NUM_CHUNKS:
                    result = self.predict(frames)
-                   if result > 0.1: print("Triggered")
+                   if result > 0:
+                       print("Triggered")
+                       self.triggered = True
+                       return True
                    self.recording = False
             else:
                 pass

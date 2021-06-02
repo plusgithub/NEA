@@ -14,3 +14,11 @@ getNews.getNews:
   - "news"
 searchYouTube.search_play:
   - "play"
+define.defineWord:
+  - "define"
+wikiSearch.search:
+  - "search"
+  - "such"
+getWeather.getWeather:
+  - "weather"
+  - "egg"

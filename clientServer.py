@@ -7,7 +7,7 @@ import numpy
 
 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def send_information(nlp=True):
+def send_information(clientSocket, nlp=True):
     CHUNK = 8192
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
@@ -19,17 +19,17 @@ def send_information(nlp=True):
     INCREMENT_LAG=3
     key = Fernet(b'1T09Fq3d0BcKtEAuQbv3zzWuzPiPK2PnzLGO-0yQJ7k=')
     vad_true = 0
-    p = pyaudio.PyAudio()
+
     try:
-        print('Attempting to connect...')
-        clientSocket.connect(('192.168.86.248', 8000)) #Connect to the server
+        print('Connecting...')
+        #clientSocket.connect(('192.168.50.60', 8000)) #Connect to the server
         print(f'Connected to server')
     except Exception as e:
         print(f'Could not connect to server: {e}')
 
 
 
-    input("Click enter to start recording")
+    p = pyaudio.PyAudio()
     stream = p.open(format=FORMAT,
                     channels=CHANNELS,
                     rate=RATE,
@@ -55,12 +55,13 @@ def send_information(nlp=True):
         clientSocket.send(data)
         print(f"CHUNK SENT: {o}     AUDIO VALUE: {vad_value}")
 
+    t1 = time.perf_counter()
+    print("FINISHED RECORDING")
+
     if nlp == True:
         clientSocket.send("END_NLP".encode())
     else:
         clientSocket.send("END".encode())
-    t1 = time.perf_counter()
-    print("FINISHED RECORDING")
 
     t2 = time.perf_counter()
     print(f"Time taken: {round((t2 - t1), 4)}")
@@ -68,4 +69,6 @@ def send_information(nlp=True):
     stream.stop_stream()
     stream.close()
     p.terminate()
-    return(clientSocket.recv(1024).decode())
+    response = clientSocket.recv(1024).decode()
+    clientSocket.close()
+    return(response)
