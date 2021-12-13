@@ -3,8 +3,8 @@ import boto3
 import os
 
 polly_client = boto3.Session(
-    aws_access_key_id="AKIAIYKHCJFMM3FRCKIA",                     
-    aws_secret_access_key="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",
+    aws_access_key_id="KEY",                     
+    aws_secret_access_key="SECRET",
     region_name='eu-west-2').client('polly')
 
 class Speak():
